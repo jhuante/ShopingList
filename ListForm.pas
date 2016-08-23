@@ -31,15 +31,18 @@ type
     qryDelete: TFDQuery;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
+    AndroidLStyleBook: TStyleBook;
     procedure ListView1ItemClick(const Sender: TObject;
       const AItem: TListViewItem);
     procedure btnAddClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
     procedure FDConnection1BeforeConnect(Sender: TObject);
     procedure FDConnection1AfterConnect(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
-procedure OnInputQuery_Close(const AResult: TModalResult; const AValues: array of string);  public
+    procedure OnInputQuery_Close(const AResult: TModalResult; const AValues: array of string);
+  public
     { Public declarations }
   end;
 
@@ -49,6 +52,7 @@ var
 implementation
 
 {$R *.fmx}
+
 uses  System.IOUtils;
 
 procedure TForm1.btnAddClick(Sender: TObject);
@@ -78,8 +82,6 @@ end;
 procedure TForm1.FDConnection1AfterConnect(Sender: TObject);
 begin
   FDConnection1.ExecSQL('CREATE TABLE IF NOT EXISTS Item (ShopItem  TEXT NOT NULL)');
-    FDQuery1.Close;
-    FDQuery1.Open;
 end;
 
 procedure TForm1.FDConnection1BeforeConnect(Sender: TObject);
@@ -89,6 +91,15 @@ begin
       TPath.Combine(TPath.GetDocumentsPath, 'shoplist.s3db');
   {$ENDIF}
 end;
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+//  {$IFDEF ANDROID}
+//  if TOSVersion.Major = 5 then
+//    Form1.StyleBook := AndroidLStyleBook;
+//  {$ENDIF}
+  FDQuery1.Open;
+end;
+
 procedure TForm1.ListView1ItemClick(const Sender: TObject;
   const AItem: TListViewItem);
 begin
